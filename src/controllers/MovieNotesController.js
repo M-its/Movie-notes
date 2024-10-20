@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError")
 class MovieNotesController {
     async create(req, res) {
         const { title, description, rating, movie_tags } = req.body
-        const { user_id } = req.params
+        const user_id = req.user.id
 
         if (rating > 5 || rating < 1) {
             throw new AppError("Rating precisa estar entre 1 e 5.")
@@ -27,7 +27,7 @@ class MovieNotesController {
 
         await knex("movie_tags").insert(movieTagsInsert)
 
-        res.json()
+        return res.json()
     }
 
     async show(req, res) {
@@ -53,7 +53,8 @@ class MovieNotesController {
     }
 
     async index(req, res) {
-        const { title, user_id, movie_tags } = req.query
+        const { title, movie_tags } = req.query
+        const user_id = req.user.id
 
         let movieNotes
 
